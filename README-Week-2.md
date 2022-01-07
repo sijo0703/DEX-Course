@@ -23,30 +23,30 @@ Run&Deploy contract
   - _FEETOSETTER: you can copy your address on xDai from metamask
 
 Verify Contract
-- Find the contract on https://blockscout.com 
+- Find the contract on https://blockscout.com
+- Search by your address and click the contract address from Transactions tab   
 - Go to "Code" tab and click on "Verify&Publish"
 - Choose "Via flattened source code" and click "Next"
-- Fill in the form. For "Try to guess arguments", choose "YES" and click on "Verify"
+- Fill in the form with Contract Name, Optimization value and copy & paste contract code in the field "Enter the contract code"
+- For "Try to guess arguments", choose "YES" and click on "Verify". Wait for the code to get successfully published.
 
 In ```scripts/contracts_info.json```
 - update factory_contract_address with the address of the newly deployed contract
 
 ### Calculate INIT_CODE_PAIR_HASH
-Go back to Remix and switch to the compile Tab.
-- under the blue button "Compile UExchangeFactory_flat.sol" choose CONTRACT: "UExchangePair(UExchangeFactory_flat.sol)"
-- Then click on "Bytecode" to copy it
-- Open ```scripts/pair_bycode.json``` file and complete replace its contents with the bycode that you copied in the previous step
-- Open a terminal and run ```node scripts/get_pair_hash.js```
-- In ```scripts/contracts_info.json``` update init_code_pair_hash with the output from the previous line
+INIT_CODE_HASH is a hash of the initcode of a contract. The initcode is the code that creates the bytecode that is stored on-chain. 
+Go back to Remix and open Deploy tab and Deployed Contracts and expand UExchangeFactory contract  
+- Click on the blue button INIT_CODE_PAIR_HASH and copy the hex value starting with 0x
+- In ```scripts/contracts_info.json``` update init_code_pair_hash with the hex value from the previous line
 
 ### Deploy Router Contract
 
 Copy contracts/UExchangeRouter_flat.sol to Remix
-- Search the contract for hex to find this line (around 129):
+- Search the contract for string "init code hash" for hex to find this line (around 129):
 ```
 hex'fbc46437b443cd8d82755f5a02d9fc3e51b9ae6ddc401bd1158b1cb07013e265' // init code hash
 ```
-- Replace the hash with the PAIR_INIT_CODE_HASH from your previous step
+- Replace the hash with the PAIR_INIT_CODE_HASH from your previous step and make sure to remove the 0x in the hash
 
 Compile Contract
 - Change Compiler version to 0.6.6
@@ -58,7 +58,8 @@ Run&Deploy contract
 - Contract: ```UExchangeRouter02 - contracts/UExchangeRouter_flat.sol```
 - Deploy: Takes two arguments - expand to enter them
   - _FACTORY: This is the address of your factory contract that you deployed in the previous step. Copy it from blockscout.com.
-  - _WETH: This is the WETH contract address on xdai chain. You can find it on [blockscout.com](https://www.blockscout.com/xdai/mainnet/token/0x6A023CCd1ff6F2045C3309768eAd9E68F978f6e1/token-transfers)
+  - _WETH: This is the WETH contract address on xdai chain. You can find it on [blockscout.com]
+  - Go to https://www.blockscout.com/xdai/mainnet/tokens and Tokens tab and All and search for WETH and copy the address of WETH with maximum holders.
 - Verify contract (optional) 
 
 In ```scripts/contracts_info.json``` update "router_contract_address" with the address of our deployed router contract
